@@ -1,0 +1,10 @@
+<?php
+
+use App\Core\Controllers\{{name}}Controller;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('{{lowerName}}')->middleware(['api', 'auth:sanctum'])->group(function () {
+    Route::get('iget', [{{name}}Controller::class, 'iget']);
+    Route::get('ilist', [{{name}}Controller::class, 'ilist']);
+    Route::post('iformAction', [{{name}}Controller::class, 'formAction']);
+});

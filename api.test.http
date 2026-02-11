@@ -1,0 +1,133 @@
+### Test API Endpoints
+
+# Test login endpoint
+POST http://127.0.0.1:8000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "admin"
+}
+
+### Test logout endpoint
+GET http://127.0.0.1:8000/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer 2|CsyCxTVd4tfpzPMEipb5C4VefzblblOHpBgnM3QT67041f40
+
+### user api
+GET http://127.0.0.1:8000/api/users/ilist?paginate=true&per_page=5
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### register user
+POST http://127.0.0.1:8000/api/users/iformAction
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+{
+    "form_method": "save",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "password": "password123",
+    "phone": "1234567890",
+    "role": "User"
+}
+
+### user get 
+GET http://127.0.0.1:8000/api/users/iget
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+
+### module api
+GET http://127.0.0.1:8000/api/module/ilist?paginate=true&per_page=5
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### module get
+GET http://127.0.0.1:8000/api/module/iget?id=1
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### module save
+POST http://127.0.0.1:8000/api/module/iformAction
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+{
+    "form_method": "save",
+    "name": "Test Module",
+    "description": "Test Module Description",
+    "code": "MD-0001"
+}
+
+
+### learning material api
+GET http://127.0.0.1:8000/api/learningMaterial/ilist?paginate=true&per_page=5
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### learning material get
+GET http://127.0.0.1:8000/api/learningMaterial/iget?id=1
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### learning matrial formAction
+POST http://127.0.0.1:8000/api/learningMaterial/iformAction
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+{
+    "form_method": "save",
+    "module_id": 1,
+    "title": "Test Learning Material",
+    "description": "Test Learning Material Description",
+    "type": "document",
+    "media": "ta:application/pdf;base64,JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PAovTGVuZ3RoIDYgMCBSCi9GaWx0ZXIgL0ZsYXRlRGVjb2RlCj4+CnN0cmVhbQp4nDPQM1Qo5ypUMFAwAAgwAHEBCmVuZHN0cmVhbQplbmRvYmoKNiAwIG9iago4CmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMyAwIFIKL1Jlc291cmNlcyA3IDAgUgovTWVkaWFCb3ggWzAgMCA2MTIgNzkyXQovQ29udGVudHMgNSAwIFIKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL1Byb2NTZXQgWy9QREYgL1RleHRdCj4+CmVuZG9iagozIDAgb2JqCjw8Ci9LaW5kIC9QYWdlcwovQ291bnQgMQovTWVkaWFCb3ggWzAgMCA2MTIgNzkyXQo+PgplbmRvYmoKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMyAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL01ldGFkYXRhCi9Qcm9kdWNlciAoUERGIFRlc3QpCj4+CmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1NCAwMDAwMCBuIAowMDAwMDAwMTEwIDAwMDAwIG4gCjAwMDAwMDAyMDYgMDAwMDAgbiAKMDAwMDAwMDI2NCAwMDAwMCBuIAowMDAwMDAwMzE5IDAwMDAwIG4gCjAwMDAwMDA0MTUgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA4Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo1MjMKJSVFT0Y="
+}
+
+### quiz api
+GET http://127.0.0.1:8000/api/quiz/ilist?paginate=true&per_page=5
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+
+### quiz get
+GET http://127.0.0.1:8000/api/quiz/iget?id=1
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### quiz formAction
+POST http://127.0.0.1:8000/api/quiz/iformAction
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+{
+    "form_method": "save",
+    "module_id": 1,
+    "name": "Test Quiz 11 ee dd",
+    "question": "Test Quiz Question",
+    "options": [{"option":"a", "value":"Option 1"}, {"option":"b", "value":"Option 2"}, {"option":"c", "value":"Option 3"}, {"option":"d", "value":"Option 4"}],
+    "correct_option": "a"
+}
+
+### certificate api
+GET http://127.0.0.1:8000/api/certificate/ilist?paginate=true&per_page=5
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### certificate get
+GET http://127.0.0.1:8000/api/certificate/iget?id=1
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### iformaAction
+POST http://127.0.0.1:8000/api/certificate/iformAction
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+{
+    "form_method": "save",
+    "user_id": 1,
+    "certificate": "data:application/pdf;base64,JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PAovTGVuZ3RoIDYgMCBSCi9GaWx0ZXIgL0ZsYXRlRGVjb2RlCj4+CnN0cmVhbQp4nDPQM1Qo5ypUMFAwAAgwAHEBCmVuZHN0cmVhbQp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1NCAwMDAwMCBuIAowMDAwMDAwMTEwIDAwMDAwIG4gCjAwMDAwMDAyMDYgMDAwMDAgbiAKMDAwMDAwMDI2NCAwMDAwMCBuIAowMDAwMDAwMzE5IDAwMDAwIG4gCjAwMDAwMDA0MTUgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA4Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo1MjMKJSVFT0Y="
+}
