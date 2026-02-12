@@ -98,7 +98,7 @@ class CertificateController
                         if ($certificate) {
                              $documentUrl = null;
                                 if ($request->certificate) {
-                                    $folderPath = "uploads/certificate/";
+                                    $folderPath = public_path("uploads/certificate/");
                                     if (!is_dir($folderPath)) {
                                         @mkdir($folderPath, 0775, true);
                                     }
@@ -132,7 +132,7 @@ class CertificateController
                         $request['uuid'] = Str::uuid();
                         $documentUrl = null;
                         if ($request->certificate) {
-                            $folderPath = "uploads/certificate/";
+                            $folderPath = public_path("uploads/certificate/");
                             if (!is_dir($folderPath)) {
                                 @mkdir($folderPath, 0775, true);
                             }
@@ -149,6 +149,8 @@ class CertificateController
                             $documentUrl = $file;   
                         }
                         $request['path'] = $documentUrl;
+
+                        return response()->json($request->all());
 
                         $certificate = $this->certificateService->save($request);
 

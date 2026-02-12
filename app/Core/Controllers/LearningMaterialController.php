@@ -98,7 +98,7 @@ class LearningMaterialController
                         if ($learningmaterial) {
                             $documentUrl = null;
                             if ($request->media) {
-                                $folderPath = "uploads/learning_material/";
+                                $folderPath = public_path("uploads/learning_material/");
                                 if (!is_dir($folderPath)) {
                                     @mkdir($folderPath, 0775, true);
                                 }
@@ -133,7 +133,7 @@ class LearningMaterialController
 
                         $documentUrl = null;
                         if ($request->media) {
-                            $folderPath = "uploads/learning_material";
+                            $folderPath = public_path("uploads/learning_material/");
                             if (!is_dir($folderPath)) {
                                 @mkdir($folderPath, 0775, true);
                             }
