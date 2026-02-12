@@ -9,6 +9,15 @@ Content-Type: application/json
     "password": "admin"
 }
 
+### Test login endpoint
+POST https://lms.akiliapp.co.tz/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "admin"
+}
+
 ### Test logout endpoint
 GET http://127.0.0.1:8000/api/auth/logout
 Content-Type: application/json

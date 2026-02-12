@@ -23,7 +23,35 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-     public function ilist(Request $request)
+    public function register(Request $request)
+    {
+        $output = JsonResponse::get(JsonResponse::$ERROR, 'Ooops something went wrong !!');
+        $rules = $this->userService->validationRules();
+
+        try {
+            $error = Validator::make($request->all(), $rules);
+            if ($error->fails()) {
+                $output = JsonResponse::get(JsonResponse::$ERROR, $error->errors()->all());
+                return response()->json($output);
+            }
+
+            $request['active_user'] = 1; // admin
+
+            $output = $this->userService->transaction(function () use ($request) {
+                $request['uuid'] = Str::uuid();
+                $user = $this->userService->save($request);
+
+                return JsonResponse::get(JsonResponse::$OK, "Registration completed successful", new UsersResource($user));
+            });
+
+            return response()->json($output);
+
+        } catch (\Exception $e) {
+            return response()->json(JsonResponse::get(JsonResponse::$ERROR, $e->getMessage()));
+        }
+    }
+
+    public function ilist(Request $request)
     {
         $returnData = [];
 
