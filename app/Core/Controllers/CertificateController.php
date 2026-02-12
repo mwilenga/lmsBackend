@@ -150,8 +150,6 @@ class CertificateController
                         }
                         $request['path'] = $documentUrl;
 
-                        return response()->json($request->all());
-
                         $certificate = $this->certificateService->save($request);
 
                         return JsonResponse::get(JsonResponse::$OK, "Certificate uploaded successfully", new CertificateResource($certificate));
