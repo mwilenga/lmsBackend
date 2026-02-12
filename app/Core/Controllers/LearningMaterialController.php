@@ -114,6 +114,23 @@ class LearningMaterialController
                                 }
                                 $documentUrl = $file;   
                             }
+                            if ($request->document) {
+                                $folderPath = public_path("uploads/learning_material/");
+                                if (!is_dir($folderPath)) {
+                                    @mkdir($folderPath, 0775, true);
+                                }
+                                
+                                $base64Document = explode(";base64,", $request->document);
+                                $explodeDocument = explode("application/", $base64Document[0]);
+                                $documentType = $explodeDocument[1];
+                                $document_base64 = base64_decode($base64Document[1]);
+                                $file = $folderPath . uniqid() . '.' . $documentType;
+                                
+                                if (!file_put_contents($file, $document_base64)) {
+                                    return response()->json(JsonResponse::get(JsonResponse::$ERROR, "Failed to save document. Please try again."));
+                                }
+                                $documentUrl = $file;   
+                            }
                             $request['file_path'] = $documentUrl;
 
                             $learningmaterial = $this->learningmaterialService->update($request, $id);
@@ -139,6 +156,23 @@ class LearningMaterialController
                             }
                             
                             $base64Document = explode(";base64,", $request->media);
+                            $explodeDocument = explode("video/", $base64Document[0]);
+                            $documentType = $explodeDocument[1];
+                            $document_base64 = base64_decode($base64Document[1]);
+                            $file = $folderPath . uniqid() . '.' . $documentType;
+                            
+                            if (!file_put_contents($file, $document_base64)) {
+                                return response()->json(JsonResponse::get(JsonResponse::$ERROR, "Failed to save document. Please try again."));
+                            }
+                            $documentUrl = $file;   
+                        }
+                        if ($request->document) {
+                            $folderPath = public_path("uploads/learning_material/");
+                            if (!is_dir($folderPath)) {
+                                @mkdir($folderPath, 0775, true);
+                            }
+                            
+                            $base64Document = explode(";base64,", $request->document);
                             $explodeDocument = explode("application/", $base64Document[0]);
                             $documentType = $explodeDocument[1];
                             $document_base64 = base64_decode($base64Document[1]);
