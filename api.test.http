@@ -139,6 +139,11 @@ GET http://127.0.0.1:8000/api/certificate/ilist?paginate=true&per_page=5
 Content-Type: application/json
 Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
 
+### certificate api
+GET https://lms.akiliapp.co.tz/api/certificate/ilist?paginate=true&per_page=5
+Content-Type: application/json
+Authorization: Bearer 25|4gGgI8InaF6mMegugsS6zXhcJOVqVZNsW8inpDGi85fc61a4
+
 ### certificate get
 GET http://127.0.0.1:8000/api/certificate/iget?id=1
 Content-Type: application/json

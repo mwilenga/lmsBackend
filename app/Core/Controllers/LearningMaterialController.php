@@ -98,7 +98,7 @@ class LearningMaterialController
                         if ($learningmaterial) {
                             $documentUrl = null;
                             if ($request->media) {
-                                $folderPath = public_path("uploads/learning_material/");
+                                $folderPath = "uploads/learning_material/";
                                 if (!is_dir($folderPath)) {
                                     @mkdir($folderPath, 0775, true);
                                 }
@@ -115,7 +115,7 @@ class LearningMaterialController
                                 $documentUrl = $file;   
                             }
                             if ($request->document) {
-                                $folderPath = public_path("uploads/learning_material/");
+                                $folderPath = "uploads/learning_material/";
                                 if (!is_dir($folderPath)) {
                                     @mkdir($folderPath, 0775, true);
                                 }
@@ -150,7 +150,7 @@ class LearningMaterialController
 
                         $documentUrl = null;
                         if ($request->media) {
-                            $folderPath = public_path("uploads/learning_material/");
+                            $folderPath = "uploads/learning_material/";
                             if (!is_dir($folderPath)) {
                                 @mkdir($folderPath, 0775, true);
                             }
@@ -167,7 +167,7 @@ class LearningMaterialController
                             $documentUrl = $file;   
                         }
                         if ($request->document) {
-                            $folderPath = public_path("uploads/learning_material/");
+                            $folderPath = "uploads/learning_material/";
                             if (!is_dir($folderPath)) {
                                 @mkdir($folderPath, 0775, true);
                             }
