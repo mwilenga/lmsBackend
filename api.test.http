@@ -195,3 +195,37 @@ Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
     "assigned_user_id": 1,
     "document": "data:application/pdf;base64,JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PAovTGVuZ3RoIDYgMCBSCi9GaWx0ZXIgL0ZsYXRlRGVjb2RlCj4+CnN0cmVhbQp4nDPQM1Qo5ypUMFAwAAgwAHEBCmVuZHN0cmVhbQp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1NCAwMDAwMCBuIAowMDAwMDAwMTEwIDAwMDAwIG4gCjAwMDAwMDAyMDYgMDAwMDAgbiAKMDAwMDAwMDI2NCAwMDAwMCBuIAowMDAwMDAwMzE5IDAwMDAwIG4gCjAwMDAwMDA0MTUgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA4Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo1MjMKJSVFT0Y="
 }
+
+
+### quiz answers
+GET http://127.0.0.1:8000/api/quizAnswer/iresults?module_id=1
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### iformAction
+POST http://127.0.0.1:8000/api/quizAnswer/iformAction
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+{
+    "form_method": "save",
+    "user_id": 1,
+    "answers": [
+        {
+            "question_id": 1,
+            "answer": "b"
+        },
+        {
+            "question_id": 2,
+            "answer": "a"
+        },
+        {
+            "question_id": 3,
+            "answer": "c"
+        },
+        {
+            "question_id": 4,
+            "answer": "d"
+        }
+    ]
+}
