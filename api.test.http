@@ -130,7 +130,12 @@ Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
     "module_id": 1,
     "name": "Test Quiz 11 ee dd",
     "question": "Test Quiz Question",
-    "options": [{"option":"a", "value":"Option 1"}, {"option":"b", "value":"Option 2"}, {"option":"c", "value":"Option 3"}, {"option":"d", "value":"Option 4"}],
+    "options": [
+        {"option":"a", "value":"Option 1"},
+        {"option":"b", "value":"Option 2"},
+        {"option":"c", "value":"Option 3"},
+        {"option":"d", "value":"Option 4"}
+    ],
     "correct_option": "a"
 }
 
@@ -228,4 +233,20 @@ Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
             "answer": "d"
         }
     ]
+}
+
+### user module list
+GET http://127.0.0.1:8000/api/userModule/ilist?paginate=true&per_page=5&company_id=1&user_id=1
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+### iformAction
+POST http://127.0.0.1:8000/api/userModule/iformAction
+Content-Type: application/json
+Authorization: Bearer 3|YOu7aveTG4bLUUm0Abltkv2FzV7hdFgzmnH1gdLh06e5f2fd
+
+{
+    "form_method": "save",
+    "user_id": 1,
+    "module_id": 1
 }
