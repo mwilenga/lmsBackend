@@ -51,6 +51,15 @@ class UserModuleDao extends BaseDao
         return $usermodule;
     }
 
+    public function updateUserModuleStatus($data, $userId)
+    {
+        $usermodule = UserModule::where('user_id', $userId)->first();
+        $usermodule = $this->bindData($usermodule, $data);
+        $usermodule = parent::save($usermodule);
+
+        return $usermodule;
+    }
+
     public function one($id, $title, $extra = array())
     {
         return $this->search($id, $title, 1, $extra, true);

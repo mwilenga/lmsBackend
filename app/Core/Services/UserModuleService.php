@@ -32,6 +32,11 @@ class UserModuleService extends BaseService
         return $this->usermoduleDao->update($data, $id);
     }
 
+    public function updateUserModuleStatus($data, $userId)
+    {
+        return $this->usermoduleDao->updateUserModuleStatus($data, $userId);
+    }
+
     public function one($id, $name, $extra = array())
     {
         return $this->usermoduleDao->one($id, $name, $extra);

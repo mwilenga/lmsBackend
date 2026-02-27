@@ -6,7 +6,7 @@ use App\Core\Services\QuizAnswerService;
 use App\Core\DTO\JsonResponse;
 use App\Core\Enum\FormMethod;
 use App\Core\Services\QuizService;
-use App\Http\Resources\QuizAnswerResource;
+use App\Core\Services\UserModuleService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,11 +15,13 @@ class QuizAnswerController
 {
     protected $quizanswerService;
     protected $quizService;
+    protected $userModuleService;
 
-    public function __construct(QuizAnswerService $quizanswerService, QuizService $quizService)
+    public function __construct(QuizAnswerService $quizanswerService, QuizService $quizService, UserModuleService $userModuleService)
     {
         $this->quizanswerService = $quizanswerService;
         $this->quizService = $quizService;
+        $this->userModuleService = $userModuleService;
     }
 
     public function iresults(Request $request)
@@ -137,6 +139,9 @@ class QuizAnswerController
                             $request['answer'] = $answer['answer'];
                             $this->quizanswerService->save($request);
                         }
+
+                        // update user module status to completed
+                        $this->userModuleService->updateUserModuleStatus((object)['status' => 'completed'], $request->user_id);
 
                         return JsonResponse::get(JsonResponse::$OK, "Quiz answers saved successful");
                     });
