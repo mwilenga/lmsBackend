@@ -112,6 +112,7 @@ class QuizAnswerController
 
             $id = $request->id;
             $currentUser = auth()->user();
+            info('FORM METHOD', ['FORM METHOD' => $formMethod]);
             $request['active_user'] = $currentUser->id;
 
             info('FORM METHOD', ['FORM METHOD' => $formMethod]);
