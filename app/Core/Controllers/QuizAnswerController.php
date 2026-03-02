@@ -145,7 +145,7 @@ class QuizAnswerController
                     ]);
                     $output = $this->quizanswerService->transaction(function () use ($request) {
                         info('REQUEST DATA', [
-                            'REQUEST' => $request
+                            'REQUEST' => $request->all()
                         ]);
                         $listOfAnswer = $request->answers;
                         foreach ($listOfAnswer as $answer) {
