@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use function Laravel\Prompts\info;
+
 class QuizAnswerController
 {
     protected $quizanswerService;
@@ -138,6 +140,7 @@ class QuizAnswerController
                 case FormMethod::get('SAVE/value') :
 
                     $output = $this->quizanswerService->transaction(function () use ($request) {
+                        info('REQUEST DATA', ['REQUEST DATA' => $request]);
                         $listOfAnswer = $request->answers;
                         foreach ($listOfAnswer as $answer) {
                             $request['uuid'] = Str::uuid();
