@@ -110,8 +110,8 @@ class QuizAnswerController
 
             $id = $request->id;
             $currentUser = auth()->user();
-            info('CURREENT USER', ['TOKEN USER' => $currentUser, 'REQUEST_USER' => $request->user_id]);
             $request['active_user'] = $currentUser->id;
+            info('CURREENT USER', ['TOKEN USER' => $currentUser, 'REQUEST_USER' => $request->user_id, 'ACTIVE_USER' => $request->active_user]);
 
             switch ($formMethod) {
                 case FormMethod::get('UPDATE/value') :
