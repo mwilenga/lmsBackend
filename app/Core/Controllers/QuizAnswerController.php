@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use function Laravel\Prompts\info;
+
 class QuizAnswerController
 {
     protected $quizanswerService;
@@ -111,7 +113,6 @@ class QuizAnswerController
             $id = $request->id;
             $currentUser = auth()->user();
             $request['active_user'] = $currentUser->id;
-            info('CURREENT USER', ['TOKEN USER' => $currentUser, 'REQUEST_USER' => $request->user_id, 'ACTIVE_USER' => $request->active_user]);
 
             switch ($formMethod) {
                 case FormMethod::get('UPDATE/value') :
@@ -134,6 +135,7 @@ class QuizAnswerController
 
                     $output = $this->quizanswerService->transaction(function () use ($request) {
                         $listOfAnswer = $request->answers;
+                        info('REQUEST DATA', ['REQUEST DATA' => $request]);
                         foreach ($listOfAnswer as $answer) {
                             $request['uuid'] = Str::uuid();
                             $request['question_id'] = $answer['question_id'];
