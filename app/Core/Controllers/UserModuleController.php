@@ -86,6 +86,7 @@ class UserModuleController
 
             $id = $request->id;
             $currentUser = auth()->user();
+            info('CURREENT USER', ['TOKEN USER' => $currentUser, 'REQUEST_USER' => $request->user_id]);
             $request['active_user'] = $currentUser->id;
 
             switch ($formMethod) {
