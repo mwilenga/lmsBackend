@@ -152,7 +152,7 @@ class QuizAnswerController
                             $request['answer'] = $answer['answer'];
 
                             info('SAVING REQUEST DATA', [
-                                'SAVING REQUEST DATA' => $request->all()
+                                'SAVING REQUEST DATA' => (object)$request
                             ]);
                             $this->quizanswerService->save($request);
                         }
