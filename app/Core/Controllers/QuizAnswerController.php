@@ -111,12 +111,6 @@ class QuizAnswerController
             $id = $request->id;
             $currentUser = auth()->user();
             $request['active_user'] = $currentUser->id;
-            info('CURREENT USER', [
-                'TOKEN USER' => $currentUser, 
-                'REQUEST_USER' => $request->user_id, 
-                'ACTIVE_USER' => $request->active_user,
-                'FORM_METHOD' => $formMethod
-            ]);
 
             switch ($formMethod) {
                 case FormMethod::get('UPDATE/value') :
@@ -136,29 +130,17 @@ class QuizAnswerController
                     break;
 
                 case FormMethod::get('SAVE/value') :
-
-                    info('CURREENT USER', [
-                        'TOKEN USER' => $currentUser, 
-                        'REQUEST_USER' => $request->user_id, 
-                        'ACTIVE_USER' => $request->active_user,
-                        'FORM_METHOD' => $formMethod
-                    ]);
                     $output = $this->quizanswerService->transaction(function () use ($request) {
-                        
                         $listOfAnswer = $request->answers;
                         foreach ($listOfAnswer as $answer) {
                             $request['uuid'] = Str::uuid();
                             $request['question_id'] = $answer['question_id'];
                             $request['answer'] = $answer['answer'];
-
-                            info('SAVING REQUEST DATA', [
-                                'SAVING REQUEST DATA' => (object)$request
-                            ]);
                             $this->quizanswerService->save($request);
                         }
 
                         // update user module status to completed
-                        $this->userModuleService->updateUserModuleStatus((object)['status' => 'completed'], $request->user_id);
+                        $this->userModuleService->updateUserModuleStatus((object)['status' => 'completed', 'active_user' => $request->active_user ], $request->user_id);
 
                         return JsonResponse::get(JsonResponse::$OK, "Quiz answers saved successful");
                     });
