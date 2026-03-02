@@ -137,6 +137,12 @@ class QuizAnswerController
 
                 case FormMethod::get('SAVE/value') :
 
+                    info('CURREENT USER', [
+                        'TOKEN USER' => $currentUser, 
+                        'REQUEST_USER' => $request->user_id, 
+                        'ACTIVE_USER' => $request->active_user,
+                        'FORM_METHOD' => $formMethod
+                    ]);
                     $output = $this->quizanswerService->transaction(function () use ($request) {
                         $listOfAnswer = $request->answers;
                         foreach ($listOfAnswer as $answer) {
