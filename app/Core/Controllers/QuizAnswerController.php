@@ -144,6 +144,9 @@ class QuizAnswerController
                         'FORM_METHOD' => $formMethod
                     ]);
                     $output = $this->quizanswerService->transaction(function () use ($request) {
+                        info('REQUEST DATA', [
+                            'REQUEST' => $request
+                        ]);
                         $listOfAnswer = $request->answers;
                         foreach ($listOfAnswer as $answer) {
                             $request['uuid'] = Str::uuid();
