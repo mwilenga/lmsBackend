@@ -140,7 +140,7 @@ class QuizAnswerController
                 case FormMethod::get('SAVE/value') :
 
                     $output = $this->quizanswerService->transaction(function () use ($request) {
-                        info('REQUEST DATA', ['REQUEST DATA' => $request]);
+                        // info('REQUEST DATA', ['REQUEST DATA' => $request]);
                         $listOfAnswer = $request->answers;
                         foreach ($listOfAnswer as $answer) {
                             $request['uuid'] = Str::uuid();
