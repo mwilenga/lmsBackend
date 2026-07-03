@@ -30,6 +30,10 @@ class UsersDao extends BaseDao
         if (!empty($data->password)) $user->password = Hash::make($data->password);
         if (!empty($data->role)) $user->role = $data->role;
 
+        if (!empty($data->registration_type)) $user->registration_type = $data->registration_type;
+        if (!empty($data->nida)) $user->nida = $data->nida;
+        if (!empty($data->hub_id)) $user->hub_id = $data->hub_id;
+
         if (!empty($data->company_id)) $user->company_id = $data->company_id;
 
         if (!empty($data->created_by)) $user->created_by = $data->created_by;
@@ -44,7 +48,7 @@ class UsersDao extends BaseDao
         $user = $this->bindData($user, $data);
         $user = parent::save($user, $firstOrCreate);
 
-        return $user;
+        return $user->load('hub');
     }
 
     public function update($data, $id)
@@ -53,7 +57,7 @@ class UsersDao extends BaseDao
         $user = $this->bindData($user, $data);
         $user = parent::save($user);
 
-        return $user;
+        return $user->load('hub');
     }
 
     public function one($id, $title, $extra = array())
@@ -80,6 +84,7 @@ class UsersDao extends BaseDao
             if (!empty($extra['description'])) { $query->where('description', '=', $extra['description']); }
             if (!empty($extra['company_id'])) { $query->where('company_id', '=', $extra['company_id']); }
             if (!empty($extra['role'])) { $query->where('role', '=', $extra['role']); }
+            if (!empty($extra['registration_type'])) { $query->where('registration_type', '=', $extra['registration_type']); }
         }
 
         $query->orderBy('id', 'DESC');
@@ -88,6 +93,7 @@ class UsersDao extends BaseDao
         if (!empty($extra)) {
             $listOfWith = [];
             if (!empty($extra['with_item'])) { $listOfWith = array_merge($listOfWith, ['item']); }
+            if (!empty($extra['with_hub'])) { $listOfWith = array_merge($listOfWith, ['hub']); }
             if (!empty($listOfWith)) { $query->with($listOfWith); }
         }
 

@@ -53,7 +53,16 @@ class UserModuleDao extends BaseDao
 
     public function updateUserModuleStatus($data, $userId)
     {
-        $usermodule = UserModule::where('user_id', $userId)->first();
+        $query = UserModule::where('user_id', $userId);
+        if (!empty($data->module_id)) {
+            $query->where('module_id', $data->module_id);
+        }
+
+        $usermodule = $query->first();
+        if (empty($usermodule)) {
+            throw new \Exception("User module record not found");
+        }
+
         $usermodule = $this->bindData($usermodule, $data);
         $usermodule = parent::save($usermodule);
 

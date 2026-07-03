@@ -2,6 +2,7 @@
 
 namespace App\Core\Dao;
 
+use App\Core\Model\Quiz;
 use App\Core\Model\QuizAnswer;
 use App\Core\Util\StringUtil;
 
@@ -22,6 +23,7 @@ class QuizAnswerDao extends BaseDao
         }
 
         if (!empty($data->uuid)) $quizanswer->uuid = $data->uuid;
+        if (!empty($data->submission_uuid)) $quizanswer->submission_uuid = $data->submission_uuid;
         if (!empty($data->user_id)) $quizanswer->user_id = $data->user_id;
         if (!empty($data->question_id)) $quizanswer->question_id = $data->question_id;
         if (!empty($data->answer)) $quizanswer->answer = $data->answer;
@@ -73,6 +75,7 @@ class QuizAnswerDao extends BaseDao
             }
             if (!empty($extra['user_id'])) { $query->where('user_id', '=', $extra['user_id']); }
             if (!empty($extra['question_id'])) { $query->where('question_id', '=', $extra['question_id']); }
+            if (!empty($extra['submission_uuid'])) { $query->where('submission_uuid', '=', $extra['submission_uuid']); }
             if (!empty($extra['uuid'])) { $query->where('uuid', '=', $extra['uuid']); }
             if (!empty($extra['description'])) { $query->where('description', '=', $extra['description']); }
             if (!empty($extra['company_id'])) { $query->where('company_id', '=', $extra['company_id']); }
@@ -89,6 +92,20 @@ class QuizAnswerDao extends BaseDao
 
         // exit(var_dump($this->getSql($query)));
         if ($first) { return $query->first();  } else if(isset($extra['paginate']) && $extra['paginate']) { return $query->paginate($extra['per_page']); } else { return $query->get(); }
+    }
+
+    public function getLatestSubmissionUuid($userId, $moduleId)
+    {
+        $questionIds = Quiz::where('module_id', $moduleId)->pluck('id');
+        if ($questionIds->isEmpty()) {
+            return null;
+        }
+
+        return QuizAnswer::where('user_id', $userId)
+            ->whereIn('question_id', $questionIds)
+            ->whereNotNull('submission_uuid')
+            ->orderBy('created_at', 'desc')
+            ->value('submission_uuid');
     }
 
 }

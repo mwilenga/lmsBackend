@@ -26,7 +26,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $output = JsonResponse::get(JsonResponse::$ERROR, 'Ooops something went wrong !!');
-        $rules = $this->userService->validationRules();
+        $rules = $this->userService->registrationValidationRules();
 
         try {
             $error = Validator::make($request->all(), $rules);
@@ -36,6 +36,9 @@ class UserController extends Controller
             }
 
             $request['active_user'] = 1; // admin
+            if (empty($request['role'])) {
+                $request['role'] = 'User';
+            }
 
             $output = $this->userService->transaction(function () use ($request) {
                 $request['uuid'] = Str::uuid();

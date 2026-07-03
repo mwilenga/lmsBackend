@@ -26,51 +26,35 @@ class QuizAnswerController
 
     public function iresults(Request $request)
     {
-        $returnData = [];
-
-        $q = $request->q;
-        $paginate = $request->paginate;
-        $per_page = $request->per_page;
-        $company_id = $request->company_id;
-        $user_id = $request->user_id;
+        $user_id = $request->user_id ?? auth()->id();
         $module_id = $request->module_id;
+
         try {
-            $extra = [ 'q' => $q, 'company_id' => $company_id, 'user_id' => $user_id, 'module_id' => $module_id];
-            if($paginate) {
-                $extra['paginate'] = $paginate;
-                $extra['per_page'] = $per_page;
+            if (empty($module_id)) {
+                return response()->json(JsonResponse::get(JsonResponse::$ERROR, 'module_id is required'));
             }
 
-            $listOfQuestion = $this->quizService->search(null, null, null, [ 'module_id' => $module_id ]);
-            if($listOfQuestion->isEmpty()) {
-                return JsonResponse::get(JsonResponse::$ERROR, 'No questions found for this module', $returnData);
+            if (empty($user_id)) {
+                return response()->json(JsonResponse::get(JsonResponse::$ERROR, 'user_id is required'));
             }
 
-            $countCorrectAnswer = 0;
-            // append user answer to each question user has answered
-            foreach($listOfQuestion as $question) {
-                $userAnswer = $this->quizanswerService->one(null, null, [ 'user_id' => $user_id, 'question_id' => $question->id ]);
-                if($userAnswer) {
-                    $question->user_answer = $userAnswer->answer;
-                    $question->is_user_answer_correct = $userAnswer->answer === $question->correct_option ? true : false;
-                    if($question->is_user_answer_correct) {
-                        $countCorrectAnswer++;
-                    }
-                }
+            $results = $this->quizanswerService->getModuleQuizResults($user_id, $module_id);
+            if (empty($results)) {
+                return JsonResponse::get(JsonResponse::$ERROR, 'No questions found for this module');
             }
 
-            $totalQuestions = $listOfQuestion->count();
-            $returnData['count_correct_answer'] = $countCorrectAnswer;
-            $returnData['total_questions'] = $totalQuestions;
-            $returnData['passPercentage'] = ($countCorrectAnswer / $totalQuestions) * 100;
-            $returnData['list_of_item'] = $listOfQuestion;
+            if (!$results['passed']) {
+                return JsonResponse::get(
+                    JsonResponse::$ERROR,
+                    $this->quizanswerService->belowPassMarkMessage(),
+                    $results
+                );
+            }
 
-        return JsonResponse::get(JsonResponse::$OK, 'List of Item', $returnData);
-
+            return JsonResponse::get(JsonResponse::$OK, 'Quiz results', $results);
         } catch (\Exception $e) {
             return response()->json(JsonResponse::get(JsonResponse::$ERROR, $e->getMessage()));
         }
-        
     }
 
     public function iget(Request $request)
@@ -132,18 +116,34 @@ class QuizAnswerController
                 case FormMethod::get('SAVE/value') :
 
                     $output = $this->quizanswerService->transaction(function () use ($request) {
-                        $listOfAnswer = $request->answers;
-                        foreach ($listOfAnswer as $answer) {
-                            $request['uuid'] = Str::uuid();
+                        $submissionUuid = (string) Str::uuid();
+                        $request['submission_uuid'] = $submissionUuid;
+
+                        foreach ($request->answers as $answer) {
+                            $request['uuid'] = (string) Str::uuid();
                             $request['question_id'] = $answer['question_id'];
                             $request['answer'] = $answer['answer'];
                             $this->quizanswerService->save($request);
                         }
 
-                        // update user module status to completed
-                        $this->userModuleService->updateUserModuleStatus((object)['status' => 'completed'], $request->user_id);
+                        $results = $this->quizanswerService->getModuleQuizResults($request->user_id, $request->module_id);
 
-                        return JsonResponse::get(JsonResponse::$OK, "Quiz answers saved successful");
+                        if ($results['passed']) {
+                            $this->userModuleService->updateUserModuleStatus(
+                                (object) ['status' => 'completed', 'module_id' => $request->module_id, 'active_user' => $request->active_user],
+                                $request->user_id
+                            );
+                        }
+
+                        if (!$results['passed']) {
+                            return JsonResponse::get(
+                                JsonResponse::$ERROR,
+                                $this->quizanswerService->belowPassMarkMessage(),
+                                $results
+                            );
+                        }
+
+                        return JsonResponse::get(JsonResponse::$OK, "Quiz answers saved successful", $results);
                     });
 
                     return response()->json($output);

@@ -19,7 +19,10 @@ class UsersResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'role' => $this->role
+            'role' => $this->role,
+            'registration_type' => $this->registration_type,
+            'nida' => $this->nida,
+            'hub' => $this->when($this->hub_id, new HubResource($this->whenLoaded('hub'))),
         ];
     }
 }

@@ -4,16 +4,11 @@ namespace App\Core\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class User extends BaseModel
+class Hub extends BaseModel
 {
     use HasFactory;
 
-    protected $table = 'users';
+    protected $table = 'hub';
     protected $fillable = [];
     protected $guarded = [];
-
-    public function hub()
-    {
-        return $this->belongsTo(Hub::class, 'hub_id');
-    }
 }

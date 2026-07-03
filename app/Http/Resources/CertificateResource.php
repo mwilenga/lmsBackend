@@ -21,6 +21,7 @@ class CertificateResource extends JsonResource
             'phone' => $this->user->phone,
             'email' => $this->user->email,
             'path' => $this->path ? config('app.url') . '/' . $this->path : null,
+            'approval_status' => $this->approval_status,
         ];
     }
 }

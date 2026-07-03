@@ -3,6 +3,7 @@
 namespace App\Core\Services;
 
 use App\Core\Dao\CertificateDao;
+use App\Core\Enum\CertificateApprovalStatus;
 
 class CertificateService extends BaseService
 {
@@ -22,6 +23,27 @@ class CertificateService extends BaseService
         );
     }
 
+    public function approvalValidationRules()
+    {
+        return [
+            'id' => 'required|integer|exists:certificate,id',
+        ];
+    }
+
+    public function updateValidationRules()
+    {
+        return [
+            'id' => 'required|integer|exists:certificate,id',
+            'approval_status' => 'nullable|in:' . implode(',', CertificateApprovalStatus::getValueList()),
+            'certificate' => 'nullable|string',
+        ];
+    }
+
+    public function approvalStatuses()
+    {
+        return CertificateApprovalStatus::getList();
+    }
+
     public function save($data)
     {
         return $this->certificateDao->save($data);
@@ -30,6 +52,11 @@ class CertificateService extends BaseService
     public function update($data, $id)
     {
         return $this->certificateDao->update($data, $id);
+    }
+
+    public function approve($data)
+    {
+        return $this->certificateDao->approve($data->id, $data);
     }
 
     public function one($id, $name, $extra = array())

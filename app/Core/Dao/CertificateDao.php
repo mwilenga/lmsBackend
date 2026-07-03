@@ -2,6 +2,7 @@
 
 namespace App\Core\Dao;
 
+use App\Core\Enum\CertificateApprovalStatus;
 use App\Core\Model\Certificate;
 use App\Core\Util\StringUtil;
 
@@ -24,6 +25,7 @@ class CertificateDao extends BaseDao
         if (!empty($data->uuid)) $certificate->uuid = $data->uuid;
         if (!empty($data->user_id)) $certificate->user_id = $data->user_id;
         if (!empty($data->path)) $certificate->path = $data->path;
+        if (!empty($data->approval_status)) $certificate->approval_status = $data->approval_status;
 
         if (!empty($data->company_id)) $certificate->company_id = $data->company_id;
 
@@ -37,9 +39,12 @@ class CertificateDao extends BaseDao
     {
         $certificate = new Certificate();
         $certificate = $this->bindData($certificate, $data);
+        if (empty($certificate->approval_status)) {
+            $certificate->approval_status = CertificateApprovalStatus::get('PENDING/value');
+        }
         $certificate = parent::save($certificate, $firstOrCreate);
 
-        return $certificate;
+        return $certificate->load('user');
     }
 
     public function update($data, $id)
@@ -48,7 +53,20 @@ class CertificateDao extends BaseDao
         $certificate = $this->bindData($certificate, $data);
         $certificate = parent::save($certificate);
 
-        return $certificate;
+        return $certificate->load('user');
+    }
+
+    public function approve($id, $data)
+    {
+        $certificate = Certificate::find($id);
+        if (empty($certificate)) {
+            return null;
+        }
+
+        $certificate->approval_status = CertificateApprovalStatus::get('APPROVED/value');
+        $certificate->active_user = $data->active_user;
+
+        return parent::save($certificate)->load('user');
     }
 
     public function one($id, $title, $extra = array())
@@ -73,8 +91,10 @@ class CertificateDao extends BaseDao
             if (!empty($extra['user_id'])) { $query->where('user_id', '=', $extra['user_id']); }
             if (!empty($extra['uuid'])) { $query->where('uuid', '=', $extra['uuid']); }
             if (!empty($extra['path'])) { $query->where('path', '=', $extra['path']); }
+            if (!empty($extra['approval_status'])) { $query->where('approval_status', '=', $extra['approval_status']); }
         }
 
+        $query->with('user');
         $query->orderBy('id', 'DESC');
         if (!empty($limit) && $limit > 0) { $query->limit($limit); }
 

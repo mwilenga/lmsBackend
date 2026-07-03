@@ -4,6 +4,7 @@ namespace App\Core\Controllers;
 
 use App\Core\Services\CertificateService;
 use App\Core\DTO\JsonResponse;
+use App\Core\Enum\CertificateApprovalStatus;
 use App\Core\Enum\FormMethod;
 use App\Http\Resources\CertificateResource;
 use Illuminate\Support\Facades\Validator;
@@ -30,8 +31,14 @@ class CertificateController
         $per_page = $request->per_page;
         $company_id = $request->company_id;
         $user_id = $request->user_id;
+        $approval_status = $request->approval_status;
         try {
-            $extra = [ 'q' => $q, 'company_id' => $company_id, 'user_id' => $user_id];
+            $extra = [
+                'q' => $q,
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'approval_status' => $approval_status,
+            ];
             if($paginate) {
                 $extra['paginate'] = $paginate;
                 $extra['per_page'] = $per_page;
@@ -58,7 +65,10 @@ class CertificateController
             $item = $this->certificateService->one($id, null, [ 'with_company_logo' => 'yes' ]);
 
             if(!empty($item)) {
-                $returnData = [ 'item' => new CertificateResource($item) ];
+                $returnData = [
+                    'item' => new CertificateResource($item),
+                    'approval_statuses' => CertificateApprovalStatus::getList(),
+                ];
             }
 
             return JsonResponse::get(JsonResponse::$OK, 'Item', $returnData);
@@ -77,6 +87,9 @@ class CertificateController
             $formMethod = $request->form_method;
 
             if (in_array($formMethod, [FormMethod::get('UPDATE/value'), FormMethod::get('SAVE/value')])) {
+                $rules = $formMethod === FormMethod::get('UPDATE/value')
+                    ? $this->certificateService->updateValidationRules()
+                    : $this->certificateService->validationRules();
                 $error = Validator::make($request->all(), $rules);
 
                 if ($error->fails()) {
@@ -117,7 +130,10 @@ class CertificateController
                                 $request['path'] = $documentUrl;
 
                             $certificate = $this->certificateService->update($request, $id);
-                            return JsonResponse::get(JsonResponse::$OK, "Certificate upload updated successful", new CertificateResource($certificate));
+                            return JsonResponse::get(JsonResponse::$OK, "Certificate upload updated successful", [
+                                'item' => new CertificateResource($certificate),
+                                'approval_statuses' => CertificateApprovalStatus::getList(),
+                            ]);
                         }
 
                         return JsonResponse::get(JsonResponse::$ERROR, "The data you're trying to update could not be found on the server!");
@@ -177,6 +193,48 @@ class CertificateController
                     break;
             }
 
+        } catch (\Exception $e) {
+            return response()->json(JsonResponse::get(JsonResponse::$ERROR, $e->getMessage()));
+        }
+    }
+
+    public function approve(Request $request)
+    {
+        $output = JsonResponse::get(JsonResponse::$ERROR, 'Ooops something went wrong !!');
+        $rules = $this->certificateService->approvalValidationRules();
+
+        try {
+            $error = Validator::make($request->all(), $rules);
+            if ($error->fails()) {
+                $output = JsonResponse::get(JsonResponse::$ERROR, $error->errors()->all());
+                return response()->json($output);
+            }
+
+            $currentUser = auth()->user();
+            $request['active_user'] = $currentUser->id;
+
+            $output = $this->certificateService->transaction(function () use ($request) {
+                $certificate = $this->certificateService->approve($request);
+
+                if (empty($certificate)) {
+                    return JsonResponse::get(JsonResponse::$ERROR, "The certificate you're trying to approve could not be found on the server!");
+                }
+
+                return JsonResponse::get(JsonResponse::$OK, "Certificate approved successfully", new CertificateResource($certificate));
+            });
+
+            return response()->json($output);
+        } catch (\Exception $e) {
+            return response()->json(JsonResponse::get(JsonResponse::$ERROR, $e->getMessage()));
+        }
+    }
+
+    public function approvalStatuses()
+    {
+        try {
+            return JsonResponse::get(JsonResponse::$OK, 'Certificate approval statuses', [
+                'approval_statuses' => $this->certificateService->approvalStatuses(),
+            ]);
         } catch (\Exception $e) {
             return response()->json(JsonResponse::get(JsonResponse::$ERROR, $e->getMessage()));
         }
