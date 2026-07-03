@@ -114,7 +114,6 @@ class QuizAnswerController
                     break;
 
                 case FormMethod::get('SAVE/value') :
-
                     $output = $this->quizanswerService->transaction(function () use ($request) {
                         $submissionUuid = (string) Str::uuid();
                         $request['submission_uuid'] = $submissionUuid;
